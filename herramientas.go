@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 type Herramienta struct{}
 
 var Herramientas_Path string = "data/herramienta.csv"
@@ -18,9 +16,8 @@ func (h *Herramienta) NewFile() File {
 	file.ReadFile(&QuerySelector)
 
 	var data []string
-	for _, v := range QuerySelector {
-		value := fmt.Sprintf("%v", *v)
-		data = append(data, value)
+	for i, _ := range QuerySelector {
+		data = append(data, QuerySelector[i].Descripcion)
 	}
 
 	file.data = data

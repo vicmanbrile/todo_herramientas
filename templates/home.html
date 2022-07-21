@@ -8,8 +8,12 @@
             <p>{{.Message}}</p>
 
             {{ range $s := .Herramienta}}
-                <p>{{ . }}</p>
-            {{ .end }}
+                <p>{{ $s }}</p>
+            {{ end }}
+
+						{{ range $s := .Trabajadores}}
+                <p>{{ $s }}</p>
+            {{ end }}
         </main>
     </body>
 </html>

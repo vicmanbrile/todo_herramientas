@@ -1,0 +1,10 @@
+run = "go run ."
+
+[languages.go]
+pattern = "**/*.go"
+
+[languages.go.languageServer]
+start = "gopls"
+
+[nix]
+channel = "stable-21_11"
