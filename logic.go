@@ -1,20 +1,42 @@
 package main
 
 import (
+	"encoding/csv"
+	"fmt"
+	"io"
+	"os"
+	"time"
+
 	"github.com/gocarina/gocsv"
 )
 
+type DateTime struct {
+	time.Time
+}
+
+func (date *DateTime) MarshalCSV() (string, error) {
+	return date.Time.Format("2006-01-02 15:04:05"), nil
+}
+
+func (date *DateTime) UnmarshalCSV(csv string) (err error) {
+	date.Time, err = time.Parse("2006-01-02 15:04:05", csv)
+	return err
+}
+
 type Document interface {
-	NewFile(path string) File
+	NewFile() File
+}
+
+func NewFile(d Document) File {
+	return d.NewFile()
 }
 
 type File struct {
 	path string
-	out  []interface{}
+	data []string
 }
 
-
-func (f *File) ReadFile(path string) {
+func (f *File) ReadFile(out interface{}) {
 
 	clientsFile, err := os.Open(f.path)
 	if err != nil {
@@ -25,17 +47,23 @@ func (f *File) ReadFile(path string) {
 
 	gocsv.SetCSVReader(Patter)
 
-	if err := gocsv.UnmarshalFile(clientsFile, &f.out); err != nil {
+	if err := gocsv.UnmarshalFile(clientsFile, out); err != nil {
 		panic(err)
 	}
 
-	for _, i := range f.out {
-		fmt.Println(i.Nombre)
-	}
-
-
 	if _, err := clientsFile.Seek(0, 0); err != nil {
 		fmt.Println(err)
+	}
+
+}
+
+func (f *File) PrintData() {
+	if len(f.data) == 0 {
+		fmt.Println("No hay Data")
+	} else {
+		for _, v := range f.data {
+			fmt.Println(v)
+		}
 	}
 
 }
